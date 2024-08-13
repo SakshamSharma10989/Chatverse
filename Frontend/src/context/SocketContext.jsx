@@ -1,25 +1,27 @@
-import { createContext, useState, useEffect, useContext } from "react";
-import { useAuthContext } from "./AuthContext";
-import io from "socket.io-client";
+import { createContext, useContext, useEffect, useState } from "react";
+import { useAuthContext } from "./Authcontext";
+import io from "socket.io-client"
 
-const SocketContext = createContext();
+const SocketContext=createContext()
 
 export const useSocketContext = () => {
 	return useContext(SocketContext);
 };
 
-export const SocketContextProvider = ({ children }) => {
-	const [socket, setSocket] = useState(null);
-	const [onlineUsers, setOnlineUsers] = useState([]);
-	const { authUser } = useAuthContext();
+export const SocketContextProvider=({children})=>{
+    const [socket,setSocket]= useState(null)
+    const [onlineUsers,setOnlineUsers]=useState([])
+    const {authUser}= useAuthContext();
 
-	useEffect(() => {
-		if (authUser) {
-			const socket = io("https://chat-app-yt.onrender.com", {
+
+    useEffect(()=>{
+        if (authUser) {
+			const socket = io("http://localhost:5000", {
 				query: {
 					userId: authUser._id,
 				},
 			});
+
 
 			setSocket(socket);
 
@@ -36,6 +38,10 @@ export const SocketContextProvider = ({ children }) => {
 			}
 		}
 	}, [authUser]);
-
-	return <SocketContext.Provider value={{ socket, onlineUsers }}>{children}</SocketContext.Provider>;
-};
+    
+    return(
+        <SocketContext.Provider value={{socket,onlineUsers}}>
+         {children}
+        </SocketContext.Provider>
+    )
+}
