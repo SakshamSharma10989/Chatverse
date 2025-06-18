@@ -2,80 +2,87 @@ import bcryptjs from "bcryptjs"
 import User from "../models/user.model.js"
 import generateTokenandsetCookie from "../utils/generateToken.js"
 
-export const signup=async(req,res)=>{
-    try {
-        const {fullname,username,password,confirmPassword,gender}=req.body
+export const signup = async (req, res) => {
+  try {
+    const { fullname, username, password, confirmPassword, gender } = req.body;
 
-        if(password!==confirmPassword){
-           return res.status(400).json({error:"Password do not match"})
-
-        }
-
-        const user= await User.findOne({username})
-        if(user){
-            return res.status(400).json({error:"Username already exists"})
-        }
-        //hashing of password
-        
-        const salt= await bcryptjs.genSalt(10)
-        const hashedpassword= await bcryptjs.hash(password,salt)
-
-        //avatar based on username
-        const boyProfilepic=`https://avatar.iran.liara.run/public/boy?username=${username}`
-        const girlProfilepic=`https://avatar.iran.liara.run/public/girl?username=${username}`
-
-        const newuser= new User({
-            fullname,
-            username,
-            password:hashedpassword,
-            gender,
-            profilePic: gender==="male" ? boyProfilepic:girlProfilepic
-        })
-        
-        if(newuser){
-            // generate JWT token 
-        generateTokenandsetCookie(newuser._id,res);    
-        await newuser.save()
-        res.status(201).json({
-            _id:newuser._id,
-            fullname:newuser.fullname,
-            username:newuser.username,
-            profilePic:newuser.profilePic
-        })
-    }else{
-        res.status(400).json({error:"Invalid user data"})
+    if (!fullname || !username || !password || !confirmPassword || !gender) {
+      return res.status(400).json({ error: "All fields are required" });
     }
 
-    } catch (error) {
-        res.status(500).json({error:"Internal Server Error"})
+    if (password !== confirmPassword) {
+      return res.status(400).json({ error: "Password does not match" });
     }
-}
 
-
-export const login=async(req,res)=>{
-    try {
-        const {username,password}=req.body
-        const user= await User.findOne({username})
-        
-        const isPasswordCorrect= await bcryptjs.compare(password,user.password || "")
-        
-
-        if(!user ||!isPasswordCorrect){
-            return res.status(400).json({error:"Invalid credentials"})
-        }
-
-        generateTokenandsetCookie(user._id,res);
-        res.status(201).json({
-            _id:user._id,
-            fullname:user.fullname,
-            username:user.username,
-            profilePic:user.profilePic
-        })
-
-    } catch (error) {
-        res.status(500).json({error:"Internal Server Error"})
+    const userExists = await User.findOne({ username });
+    if (userExists) {
+      return res.status(400).json({ error: "Username already exists" });
     }
-}
+
+    const salt = await bcryptjs.genSalt(10);
+    const hashedPassword = await bcryptjs.hash(password, salt);
+
+    const boyProfilePic = `https://avatar.iran.liara.run/public/boy?username=${username}`;
+    const girlProfilePic = `https://avatar.iran.liara.run/public/girl?username=${username}`;
+
+    const newUser = new User({
+      fullname,
+      username,
+      password: hashedPassword,
+      gender,
+      profilePic: gender === "male" ? boyProfilePic : girlProfilePic,
+    });
+
+    await newUser.save();  // ✅ Save first
+    generateTokenandsetCookie(newUser._id, res);  // ✅ Then generate token
+
+    res.status(201).json({
+      _id: newUser._id,
+      fullname: newUser.fullname,
+      username: newUser.username,
+      profilePic: newUser.profilePic,
+    });
+  } catch (error) {
+    console.error("Signup error:", error.message);  // ✅ Log the real error
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+
+
+export const login = async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    console.log("Login attempt:", { username });
+    if (!username || !password) {
+      console.log("Missing credentials");
+      return res.status(400).json({ error: "Please fill all fields" });
+    }
+    const user = await User.findOne({ username });
+    console.log("Found user:", user ? user._id : "Not found");
+    if (!user) {
+      console.log("User not found");
+      return res.status(400).json({ error: "Invalid credentials" });
+    }
+    const isPasswordCorrect = await bcryptjs.compare(password, user.password || "");
+    console.log("Password match:", isPasswordCorrect);
+    if (!isPasswordCorrect) {
+      console.log("Password mismatch");
+      return res.status(400).json({ error: "Invalid credentials" });
+    }
+    generateTokenandsetCookie(user._id, res);
+    console.log("Token generated for:", user._id);
+    res.status(201).json({
+      _id: user._id,
+      fullname: user.fullname,
+      username: user.username,
+      profilePic: user.profilePic,
+    });
+  } catch (error) {
+    console.error("Login error:", error.message, error.stack);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
 
 
 export const logout=(req,res)=>{

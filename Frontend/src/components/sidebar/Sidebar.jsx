@@ -7,12 +7,13 @@ import SearchInput from './SearchInput.jsx'
 
 const Sidebar = () => {
   return (
-    <div className='border-r border-slate-500 p-4 flex flex-col'>
-         <SearchInput/>
-        <div className='divider px-3'></div>
-        <Conv/>
-        <LogutButton/>
-    </div>
+   <div className='border-r border-slate-600 p-4 flex flex-col bg-slate-700'>
+    <SearchInput />
+    <div className='divider px-3'></div>
+    <Conv />
+    <LogutButton />
+</div>
+
   )
 }
 
