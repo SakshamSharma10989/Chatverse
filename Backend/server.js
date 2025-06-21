@@ -14,20 +14,27 @@ dotenv.config();
 const __dirname = path.resolve();
 const PORT = process.env.PORT || 5000;
 
-app.use(express.json()); // to parse the incoming requests with JSON payload (from req.body)
+// Middleware
+app.use(express.json());
 app.use(cookieParser());
 
+// Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/message", messageRoutes);
 app.use("/api/user", userRoutes);
 
-app.use(express.static(path.join(__dirname, "/frontend/dist")));
+// Static folder to serve uploaded media files
+app.use("/upload", express.static(path.join(__dirname, "/uploads"))); // 🆕 This line is important!
 
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "frontend", "dist", "index.html"));
-});
+// // Serve frontend build files
+// app.use(express.static(path.join(__dirname, "/frontend/dist")));
 
+// app.get("*", (req, res) => {
+//   res.sendFile(path.join(__dirname, "frontend", "dist", "index.html"));
+// });
+
+// Start server
 server.listen(PORT, async () => {
   await connectToMongo();
-  console.log(`listening on port ${PORT}`);
+  console.log(`Server listening on port ${PORT}`);
 });

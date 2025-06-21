@@ -1,6 +1,6 @@
 import Conversation from "../models/conversation.model.js";
 import Message from "../models/message.model.js";
-import User from "../models/user.model.js"; // NEW
+import User from "../models/user.model.js";
 import { getReceiverSocketId, io } from "../socket/socket.js";
 
 export const sendMessage = async (req, res) => {
@@ -69,6 +69,7 @@ export const getMessage = async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
 export const markMessageAsRead = async (req, res) => {
   try {
     const { messageId, messageIds } = req.body;
@@ -112,5 +113,53 @@ export const markMessageAsRead = async (req, res) => {
   } catch (error) {
     console.error("markMessageAsRead error:", error.message, error.stack);
     res.status(error.name === "CastError" ? 400 : 500).json({ error: error.message });
+  }
+};
+
+export const uploadMedia = async (req, res) => {
+  try {
+    const { id: receiverId } = req.params;
+    const senderId = req.user?._id;
+
+    if (!req.file) return res.status(400).json({ message: "No file uploaded" });
+    if (!receiverId) return res.status(400).json({ message: "Receiver ID is required" });
+
+    let conversation = await Conversation.findOne({
+      participants: { $all: [senderId, receiverId] },
+    });
+
+    if (!conversation) {
+      conversation = await Conversation.create({ participants: [senderId, receiverId], messages: [] });
+    }
+
+    const mediaUrl = `/upload/${req.file.filename}`;
+
+    const newMessage = new Message({
+      senderId,
+      receiverId,
+      mediaUrl,
+      message: "",
+      status: "sent",
+    });
+
+    conversation.messages.push(newMessage._id);
+    await Promise.all([newMessage.save(), conversation.save()]);
+
+    const receiverSocketId = getReceiverSocketId(receiverId);
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit("newMessage", newMessage);
+      newMessage.status = "delivered";
+      await newMessage.save();
+
+      const senderSocketId = getReceiverSocketId(senderId);
+      if (senderSocketId) {
+        io.to(senderSocketId).emit("deliveryReceipt", { messageId: newMessage._id });
+      }
+    }
+
+    res.status(201).json(newMessage);
+  } catch (error) {
+    console.log("Error in uploadMedia controller:", error.message);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };

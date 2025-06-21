@@ -1,11 +1,13 @@
 import express from "express";
-import { getMessage, sendMessage, markMessageAsRead } from "../controllers/message.controller.js";
+import { getMessage, sendMessage, markMessageAsRead, uploadMedia } from "../controllers/message.controller.js"; // Add uploadMedia
 import protectRoute from "../middleware/protectRoute.js";
+import { upload } from "../middleware/upload.js"; // Import upload middleware (create this file if needed)
 
-const route = express.Router();
+const router = express.Router();
 
-route.get("/:id", protectRoute, getMessage);
-route.post("/send/:id", protectRoute, sendMessage);
-route.post("/read", protectRoute, markMessageAsRead); // NEW
+router.get("/:id", protectRoute, getMessage);
+router.post("/send/:id", protectRoute, sendMessage);
+router.post("/read", protectRoute, markMessageAsRead);
+router.post("/upload/:id", protectRoute, upload.single('media'), uploadMedia); // New route for media upload
 
-export default route;
+export default router;

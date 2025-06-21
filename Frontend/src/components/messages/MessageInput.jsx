@@ -1,26 +1,23 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { BsSend, BsEmojiSmile } from 'react-icons/bs';
+import { BsSend, BsEmojiSmile, BsUpload } from 'react-icons/bs';
 import Picker from 'emoji-picker-react';
 import useSendMessage from '../../hooks/useSendMessage';
 
-const Messageinput = () => {
+const MessageInput = () => {
   const [message, setMessage] = useState('');
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
   const pickerRef = useRef(null);
+  const fileInputRef = useRef(null);
   const { loading, sendMessage } = useSendMessage();
 
-  // Handle emoji selection
   const onEmojiClick = (emojiObject) => {
     setMessage((prev) => prev + emojiObject.emoji);
-    setShowEmojiPicker(false); // Close picker after selection
+    setShowEmojiPicker(false);
   };
 
-  // Toggle emoji picker
-  const toggleEmojiPicker = () => {
-    setShowEmojiPicker(!showEmojiPicker);
-  };
+  const toggleEmojiPicker = () => setShowEmojiPicker(!showEmojiPicker);
 
-  // Close picker when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (pickerRef.current && !pickerRef.current.contains(event.target)) {
@@ -31,11 +28,28 @@ const Messageinput = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setSelectedFile(file);
+    await sendMessage(file);
+    setSelectedFile(null);
+    fileInputRef.current.value = null; // reset file input
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!message.trim()) return;
-    await sendMessage(message);
-    setMessage('');
+    if (selectedFile) {
+      await sendMessage(selectedFile);
+      setSelectedFile(null);
+    } else if (message.trim()) {
+      await sendMessage(message);
+      setMessage('');
+    }
+  };
+
+  const triggerFileInput = () => {
+    fileInputRef.current.click();
   };
 
   return (
@@ -44,18 +58,35 @@ const Messageinput = () => {
         <input
           type='text'
           className='border text-sm rounded-lg block w-full p-2.5 bg-gray-700 border-gray-600 text-white'
-          placeholder='Send a message'
+          placeholder='Send a message or upload media'
           value={message}
           onChange={(e) => setMessage(e.target.value)}
         />
+        <input
+          type='file'
+          ref={fileInputRef}
+          className='hidden'
+          onChange={handleFileChange}
+          accept='*' // ✅ allows all file types
+        />
+        <button
+          type='button'
+          onClick={triggerFileInput}
+          className='absolute inset-y-0 end-24 flex items-center pe-3'
+        >
+          <BsUpload className='text-white' />
+        </button>
         <button
           type='button'
           onClick={toggleEmojiPicker}
-          className='absolute inset-y-0 end-8 flex items-center pe-3'
+          className='absolute inset-y-0 end-16 flex items-center pe-3'
         >
           <BsEmojiSmile className='text-white' />
         </button>
-        <button type='submit' className='absolute inset-y-0 end-0 flex items-center pe-3'>
+        <button
+          type='submit'
+          className='absolute inset-y-0 end-8 flex items-center pe-3'
+        >
           {loading ? <div className='loading loading-spinner'></div> : <BsSend />}
         </button>
         {showEmojiPicker && (
@@ -68,4 +99,4 @@ const Messageinput = () => {
   );
 };
 
-export default Messageinput;
+export default MessageInput;

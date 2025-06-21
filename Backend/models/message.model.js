@@ -14,12 +14,16 @@ const messageSchema = new mongoose.Schema(
     },
     message: {
       type: String,
-      required: true,
+      required: false, // Make optional for media-only messages
     },
-    status: { 
+    status: {
       type: String,
       enum: ["sent", "delivered", "read"],
       default: "sent",
+    },
+    mediaUrl: {
+      type: String,
+      required: false, // Optional, as not all messages will have media
     },
   },
   { timestamps: true }

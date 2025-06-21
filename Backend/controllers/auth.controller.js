@@ -1,6 +1,7 @@
-import bcryptjs from "bcryptjs"
-import User from "../models/user.model.js"
-import generateTokenandsetCookie from "../utils/generateToken.js"
+import bcryptjs from "bcryptjs";
+import User from "../models/user.model.js";
+import generateTokenandsetCookie from "../utils/generateToken.js";
+import jwt from "jsonwebtoken";
 
 export const signup = async (req, res) => {
   try {
@@ -33,8 +34,8 @@ export const signup = async (req, res) => {
       profilePic: gender === "male" ? boyProfilePic : girlProfilePic,
     });
 
-    await newUser.save();  // ✅ Save first
-    generateTokenandsetCookie(newUser._id, res);  // ✅ Then generate token
+    await newUser.save();
+    generateTokenandsetCookie(newUser._id, res);
 
     res.status(201).json({
       _id: newUser._id,
@@ -43,12 +44,10 @@ export const signup = async (req, res) => {
       profilePic: newUser.profilePic,
     });
   } catch (error) {
-    console.error("Signup error:", error.message);  // ✅ Log the real error
+    console.error("Signup error:", error.message);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
-
-
 
 export const login = async (req, res) => {
   try {
@@ -70,13 +69,16 @@ export const login = async (req, res) => {
       console.log("Password mismatch");
       return res.status(400).json({ error: "Invalid credentials" });
     }
-    generateTokenandsetCookie(user._id, res);
-    console.log("Token generated for:", user._id);
-    res.status(201).json({
+
+    const token = generateTokenandsetCookie(user._id, res); // Capture the returned token
+    console.log("Token generated for:", user._id, "Token:", token);
+
+    res.status(200).json({ // Changed to 200 for login success
       _id: user._id,
       fullname: user.fullname,
       username: user.username,
       profilePic: user.profilePic,
+      token, // Include the token in the response
     });
   } catch (error) {
     console.error("Login error:", error.message, error.stack);
@@ -84,13 +86,11 @@ export const login = async (req, res) => {
   }
 };
 
-
-export const logout=(req,res)=>{
-    try {
-        res.cookie("jwt","",{maxAge:0});
-        return res.status(200).json({message:"logout successful"})
-    } catch (error) {
-        res.status(500).json({error:"Internal Server Error"})
-    }
-}
-
+export const logout = (req, res) => {
+  try {
+    res.cookie("jwt", "", { maxAge: 0 });
+    return res.status(200).json({ message: "Logout successful" });
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
