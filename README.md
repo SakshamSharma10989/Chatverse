@@ -1,18 +1,29 @@
-ChatApp
-Overview
-ChatApp is a real-time messaging application built to facilitate seamless communication between users. It features a modern, responsive user interface and supports instant messaging, group chats, and user authentication. The project is designed with scalability and maintainability in mind, making it a great starting point for developers looking to build or extend a chat application.
-Features
+# 💬 ChatApp
 
-Real-time Messaging: Send and receive messages instantly using WebSocket technology.
-User Authentication: Secure user login and registration with JWT-based authentication.
-Group Chats: Create and participate in group conversations.
-Responsive Design: Optimized for both desktop and mobile devices using Tailwind CSS.
-Message History: Persist and retrieve chat history for seamless user experience.
+A real-time private chat application built using **React**, **Node.js**, **Socket.io**, and **MongoDB**, supporting **media sharing** and **blue tick read receipts**.
 
-Tech Stack
+---
 
-Frontend: React, Tailwind CSS, JavaScript
-Backend: Node.js, Express.js
-Database: MongoDB (for user data and message history)
-Real-time Communication: Socket.IO
-Authentication: JSON Web Tokens (JWT)
+## 🚀 Features
+
+- 🔐 User Authentication (JWT)
+- 💬 Private 1-on-1 messaging
+- 📁 Media sharing (images/files)
+- ✅ Blue tick when message is read
+- 🕐 Timestamps for messages
+- 📱 Fully responsive UI
+
+---
+
+## 🛠️ Tech Stack
+
+**Frontend:**
+- React.js
+- Tailwind CSS / CSS Modules
+- Socket.io-client
+
+**Backend:**
+- Node.js + Express
+- MongoDB + Mongoose
+- Socket.io
+- Multer (for media upload to local server)
