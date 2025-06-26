@@ -27,3 +27,14 @@ A real-time private chat application built using **React**, **Node.js**, **Socke
 - MongoDB + Mongoose
 - Socket.io
 - Multer (for media upload to local server)
+### 🔐 Login Screen
+![Login](media/login.png)
+
+### 📝 Signup Screen
+![Signup](media/signup.png)
+
+### 👋 Welcome Dashboard
+![Welcome](media/welcome.png)
+
+### 💬 Chat Interface with Media Sharing & Blue Ticks
+![Chat](media/chat-media.png)
