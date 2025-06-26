@@ -28,6 +28,13 @@ A real-time private chat application built using **React**, **Node.js**, **Socke
 - Socket.io
 - Multer (for media upload to local server)
 
-
 ### 💬 Chat Interface with Media Sharing & Blue Ticks
 ![Chat](media/chat-media.png)
+## 🔧 Installation & Running the App
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/SakshamSharma10989/ChatApp.git
+cd ChatApp
+
