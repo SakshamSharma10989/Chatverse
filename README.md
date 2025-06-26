@@ -19,7 +19,7 @@ A real-time private chat application built using **React**, **Node.js**, **Socke
 
 **Frontend:**
 - React.js
-- Tailwind CSS / CSS Modules
+- Tailwind CSS
 - Socket.io-client
 
 **Backend:**
