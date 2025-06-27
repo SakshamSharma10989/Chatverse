@@ -28,16 +28,6 @@ A real-time private chat application built using **React**, **Node.js**, **Socke
 - Socket.io
 - Multer (for media upload to local server)
 
-## 🔧 Installation & Running the App
-
-### Prerequisites
-
-Ensure you have the following installed:
-- **Node.js** (v14.x or later) and **npm** (v6.x or later)
-- **Git** (for cloning the repository)
-- **MongoDB** (local installation or MongoDB Atlas for cloud)
-- A modern web browser (e.g., Chrome, Firefox)
-
 ### Installation Steps
 
 Run the following commands in your terminal to set up and start the ChatApp:
