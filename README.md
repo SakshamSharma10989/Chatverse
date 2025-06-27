@@ -1,4 +1,4 @@
-# 💬 ChatApp
+# 💬 ChatVerse
 
 A real-time private chat application built using **React**, **Node.js**, **Socket.io**, and **MongoDB**, supporting **media sharing** and **blue tick read receipts**.
 
