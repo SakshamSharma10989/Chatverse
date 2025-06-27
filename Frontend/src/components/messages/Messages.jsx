@@ -3,7 +3,7 @@ import Messago from './Messago.jsx';
 import useGetMessages from '../../hooks/useGetMessages.js';
 import MessageSkeleton from '../skeletons/MessageSkeleton.jsx';
 import useListenMessage from '../../hooks/useListenMessage.js';
-import { useAuthContext } from '../../context/Authcontext';
+import { useAuthContext } from '../../context/AuthContext.js';
 
 const Messages = () => {
   const { messages, loading } = useGetMessages();

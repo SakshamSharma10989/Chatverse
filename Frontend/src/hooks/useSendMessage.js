@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import useConversation from "../zustand/useConversation";
 import toast from "react-hot-toast";
 import { useSocketContext } from "../context/SocketContext";
-import { useAuthContext } from "../context/Authcontext";
+import { useAuthContext } from "../context/AuthContext";
 
 const useSendMessage = () => {
   const [loading, setLoading] = useState(false);

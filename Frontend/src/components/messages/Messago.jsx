@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useAuthContext } from '../../context/Authcontext';
+import { useAuthContext } from '../../context/AuthContext';
 import useConversation from '../../zustand/useConversation';
 import { extractTime } from '../../utils/extractTime';
 
