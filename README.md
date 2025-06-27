@@ -29,7 +29,7 @@ A real-time private chat application built using **React**, **Node.js**, **Socke
 - Multer (for media upload to local server)
 
 ### 💬 Chat Interface with Media Sharing & Blue Ticks
-![Chat](media/chat-media.png)
+<image-card alt="Chat" src="media/chat-media.png" ></image-card>
 
 ## 🔧 Installation & Running the App
 
@@ -44,24 +44,19 @@ Ensure you have the following installed:
 ### Installation Steps
 
 Run the following commands in your terminal to set up and start the ChatApp:
-
-```bash
 # Clone the repository and install dependencies
+```bash
 git clone https://github.com/SakshamSharma10989/ChatApp.git
 cd ChatApp
-cd server && npm install && cd ..
-cd client && npm install && cd ..
-
-# Set up environment variables (create server/.env file)
-echo "PORT=5000
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_jwt_secret_key" > server/.env
-
-# Start MongoDB (if using local MongoDB, run in a separate terminal)
-# mongod
+```
 
 # Start the server (in one terminal)
-cd server && npm start &
-
+```bash
+cd backend
+nodemon server.js
+```
 # Start the client (in another terminal or after server starts)
-cd client && npm start
+```bash
+cd frontend
+npm run dev
+```
