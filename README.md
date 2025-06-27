@@ -1,5 +1,4 @@
-<<<<<<< HEAD
-# 💬 ChatApp
+# 💬 ChatVerse
 
 A real-time private chat application built using **React**, **Node.js**, **Socket.io**, and **MongoDB**, supporting **media sharing** and **blue tick read receipts**.
 
@@ -29,16 +28,6 @@ A real-time private chat application built using **React**, **Node.js**, **Socke
 - Socket.io
 - Multer (for media upload to local server)
 
-## 🔧 Installation & Running the App
-
-### Prerequisites
-
-Ensure you have the following installed:
-- **Node.js** (v14.x or later) and **npm** (v6.x or later)
-- **Git** (for cloning the repository)
-- **MongoDB** (local installation or MongoDB Atlas for cloud)
-- A modern web browser (e.g., Chrome, Firefox)
-
 ### Installation Steps
 
 Run the following commands in your terminal to set up and start the ChatApp:
@@ -61,6 +50,4 @@ npm run dev
 🚀 To run the frontend locally, open [http://localhost:3000/](http://localhost:3000/) in your browser.
 ### 💬 Chat Interface with Media Sharing & Blue Ticks
 ![Chat](media/chat-media.png)
-=======
-# Chatverse
->>>>>>> a61485293d1bfe2223459a742a147709f5383ff5
+
