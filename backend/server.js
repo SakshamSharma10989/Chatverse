@@ -15,13 +15,24 @@ dotenv.config();
 const __dirname = path.resolve();
 const PORT = process.env.PORT || 5000;
 
-// 🛡️ Add this CORS middleware
+const allowedOrigins = [
+  "https://chatverse-w6ra.vercel.app", // your production frontend
+  "https://chatverse-781j.vercel.app", // your Vercel preview deployment
+];
+
 app.use(
   cors({
-    origin: "https://chatverse-w6ra.vercel.app",
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   })
 );
+
 
 // Middleware
 app.use(express.json());
