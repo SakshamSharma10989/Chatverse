@@ -10,7 +10,11 @@ const useGetMessages = () => {
 		const getMessages = async () => {
 			setLoading(true);
 			try {
-				const res = await fetch(`${import.meta.env.VITE_API_URL}/api/message/${selectedConversation._id}`);
+				const res = await fetch(`${import.meta.env.VITE_API_URL}/api/message/${selectedConversation._id}`, {
+  method: "GET",
+  credentials: "include", // 🔥 crucial for sending cookies
+});
+
 				const data = await res.json();
 				if (data.error) throw new Error(data.error);
 				setMessages(data);

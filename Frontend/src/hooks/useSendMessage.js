@@ -29,6 +29,7 @@ const useSendMessage = () => {
     console.log("Sending text message to:", `${baseUrl}/api/message/send/${selectedConversation._id}`);
     const res = await fetch(`${baseUrl}/api/message/send/${selectedConversation._id}`, {
       method: "POST",
+      credentials: "include", // 🔥 crucial for sending cookies
       headers: {
         "Content-Type": "application/json",
       },

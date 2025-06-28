@@ -16,6 +16,7 @@ const useSignup = () => {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ fullname, username, password, confirmPassword, gender }),
+            credentials: "include", // 🔥 crucial for sending cookies
         });
 
 

@@ -13,6 +13,7 @@ const useLogout = () => {
 			const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/logout`, {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
+			credentials: "include", // 🔥 crucial for sending cookies
 		});
 
 			const data = await res.json();
