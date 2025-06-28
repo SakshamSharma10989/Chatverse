@@ -4,20 +4,26 @@ import express from "express";
 
 const app = express();
 const server = http.createServer(app);
+
 export const io = new Server(server, {
   cors: {
-    origin: [
-      "https://chatverse-w6ra.vercel.app", // your production Vercel URL
-      "https://chatverse-781j.vercel.app", // any preview deployment
-      "http://localhost:3000",             // for local dev
-    ],
+    origin: (origin, callback) => {
+      if (
+        !origin ||
+        origin.includes("vercel.app") ||
+        origin === "http://localhost:3000"
+      ) {
+        callback(null, true);
+      } else {
+        callback(new Error("Socket.io CORS blocked this origin"));
+      }
+    },
     methods: ["GET", "POST"],
-    credentials: true, // 🔥 this is crucial
+    credentials: true,
   },
 });
 
-
-const userSocketMap = {}; 
+const userSocketMap = {};
 
 export const getReceiverSocketId = (receiverId) => {
   return userSocketMap[receiverId];
