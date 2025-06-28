@@ -17,9 +17,11 @@ const PORT = process.env.PORT || 5000;
 
 const allowedOrigins = [
   "https://chatverse-w6ra.vercel.app", // your production frontend
-  "https://chatverse-781j.vercel.app", // your Vercel preview deployment
+  "https://chatverse-781j.vercel.app", // preview #1
+  "https://chatverse-x7z2.vercel.app", // preview #2 (your error)
 ];
 
+// ✅ CORS setup
 app.use(
   cors({
     origin: function (origin, callback) {
@@ -33,6 +35,8 @@ app.use(
   })
 );
 
+// ✅ Add this to handle preflight OPTIONS requests
+app.options("*", cors({ origin: allowedOrigins, credentials: true }));
 
 // Middleware
 app.use(express.json());
