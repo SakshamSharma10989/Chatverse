@@ -6,10 +6,16 @@ const app = express();
 const server = http.createServer(app);
 export const io = new Server(server, {
   cors: {
-    origin: ["http://localhost:3000"],
+    origin: [
+      "https://chatverse-w6ra.vercel.app", // your production Vercel URL
+      "https://chatverse-781j.vercel.app", // any preview deployment
+      "http://localhost:3000",             // for local dev
+    ],
     methods: ["GET", "POST"],
+    credentials: true, // 🔥 this is crucial
   },
 });
+
 
 const userSocketMap = {}; 
 
