@@ -21,7 +21,8 @@ const Messago = ({ message }) => {
   const [previewUrl, setPreviewUrl] = useState(null);
   const closeModal = () => setPreviewUrl(null);
 
-  const fullUrl = message.mediaUrl ? `http://localhost:5000${message.mediaUrl}` : null;
+const fullUrl = message.mediaUrl ? `${import.meta.env.VITE_API_URL}${message.mediaUrl}` : null;
+
 
   const renderMedia = () => {
     if (!fullUrl) return null;
