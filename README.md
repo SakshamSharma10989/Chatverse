@@ -4,7 +4,7 @@ A real-time private chat application built using **React**, **Node.js**, **Socke
 
 ---
 
-## 🚀 Features
+##  Features
 
 - User Authentication (JWT)
 - Private 1-on-1 messaging
@@ -15,7 +15,7 @@ A real-time private chat application built using **React**, **Node.js**, **Socke
 
 ---
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 **Frontend:**
 - React.js
