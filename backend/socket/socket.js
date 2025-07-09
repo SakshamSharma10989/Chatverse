@@ -1,3 +1,4 @@
+// backend/socket/socket.js
 import { Server } from "socket.io";
 import http from "http";
 import express from "express";
@@ -7,15 +8,11 @@ const server = http.createServer(app);
 
 export const io = new Server(server, {
   cors: {
-    origin: [
-      "https://chatverse-ekdu.vercel.app", // ✅ your deployed frontend
-      "http://localhost:3000"              // ✅ local dev
-    ],
+    origin: "https://chatverse-22ox.vercel.app",
     methods: ["GET", "POST"],
-    credentials: true
-  }
+    credentials: true,
+  },
 });
-
 
 const userSocketMap = {};
 
@@ -24,7 +21,7 @@ export const getReceiverSocketId = (receiverId) => {
 };
 
 io.on("connection", (socket) => {
-  console.log("a user connected", socket.id);
+  console.log("✅ a user connected:", socket.id);
 
   const userId = socket.handshake.query.userId;
 
@@ -35,7 +32,7 @@ io.on("connection", (socket) => {
   io.emit("getOnlineUsers", Object.keys(userSocketMap));
 
   socket.on("disconnect", () => {
-    console.log("user disconnected", socket.id);
+    console.log("❌ user disconnected:", socket.id);
     if (userId) {
       delete userSocketMap[userId];
       io.emit("getOnlineUsers", Object.keys(userSocketMap));
