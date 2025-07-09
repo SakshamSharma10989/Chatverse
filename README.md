@@ -4,18 +4,18 @@ A real-time private chat application built using **React**, **Node.js**, **Socke
 
 ---
 
-## 🚀 Features
+##  Features
 
-- 🔐 User Authentication (JWT)
-- 💬 Private 1-on-1 messaging
-- 📁 Media sharing (images/files)
-- ✅ Blue tick when message is read
-- 🕐 Timestamps for messages
-- 📱 Fully responsive UI
+- User Authentication (JWT)
+- Private 1-on-1 messaging
+- Media sharing (images/files)
+- Blue tick when message is read
+- Timestamps for messages
+- Fully responsive UI
 
 ---
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 **Frontend:**
 - React.js
