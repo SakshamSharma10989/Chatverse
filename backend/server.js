@@ -15,8 +15,7 @@ dotenv.config();
 const __dirname = path.resolve();
 const PORT = process.env.PORT || 5000;
 
-const FRONTEND_URL = "https://chatverse-22ox-ok1bksdxo-saksham-sharmas-projects-63efb06a.vercel.app";
-
+const FRONTEND_URL = "https://chatverse-saksham.vercel.app"; 
 app.use(
   cors({
     origin: FRONTEND_URL,

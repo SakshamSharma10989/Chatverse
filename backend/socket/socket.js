@@ -5,7 +5,7 @@ import express from "express";
 const app = express();
 const server = http.createServer(app);
 
-const FRONTEND_URL = "https://chatverse-22ox-ok1bksdxo-saksham-sharmas-projects-63efb06a.vercel.app";
+const FRONTEND_URL = "https://chatverse-saksham.vercel.app"; // ✅ your new stable domain
 
 export const io = new Server(server, {
   cors: {
