@@ -2,7 +2,7 @@ import path from "path";
 import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
-import cors from "cors"; // 🆕
+import cors from "cors";
 
 import authRoutes from "../backend/routes/auth.route.js";
 import messageRoutes from "../backend/routes/message.route.js";
@@ -16,9 +16,9 @@ const __dirname = path.resolve();
 const PORT = process.env.PORT || 5000;
 
 const allowedOrigins = [
-  "https://chatverse-w6ra.vercel.app", // your production frontend
-  "https://chatverse-781j.vercel.app", // preview #1
-  "https://chatverse-x7z2.vercel.app", // preview #2 (your error)
+  "https://chatverse-w6ra.vercel.app",
+  "https://chatverse-781j.vercel.app",
+  "https://chatverse-x7z2.vercel.app",
 ];
 
 app.use(
@@ -38,23 +38,16 @@ app.use(
   })
 );
 
-
-// ✅ Add this to handle preflight OPTIONS requests
 app.options("*", cors({ origin: allowedOrigins, credentials: true }));
 
-// Middleware
 app.use(express.json());
 app.use(cookieParser());
+ app.use("/upload", express.static(path.join(__dirname, "/uploads")));
 
-// Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/message", messageRoutes);
 app.use("/api/user", userRoutes);
 
-// Serve uploaded media
-app.use("/upload", express.static(path.join(__dirname, "/uploads")));
-
-// Start server
 server.listen(PORT, async () => {
   await connectToMongo();
   console.log(`Server listening on port ${PORT}`);

@@ -2,6 +2,8 @@ import Conversation from "../models/conversation.model.js";
 import Message from "../models/message.model.js";
 import User from "../models/user.model.js";
 import { getReceiverSocketId, io } from "../socket/socket.js";
+import { v2 as cloudinary } from "cloudinary";
+import fs from "fs";
 
 export const sendMessage = async (req, res) => {
   try {
@@ -116,6 +118,13 @@ export const markMessageAsRead = async (req, res) => {
   }
 };
 
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
 export const uploadMedia = async (req, res) => {
   try {
     const { id: receiverId } = req.params;
@@ -132,7 +141,12 @@ export const uploadMedia = async (req, res) => {
       conversation = await Conversation.create({ participants: [senderId, receiverId], messages: [] });
     }
 
-    const mediaUrl = `/upload/${req.file.filename}`;
+    // ⬇️ Upload to Cloudinary
+    const uploadResult = await cloudinary.uploader.upload(req.file.path);
+    const mediaUrl = uploadResult.secure_url;
+
+    // ⬇️ Clean up local temp file
+    fs.unlinkSync(req.file.path);
 
     const newMessage = new Message({
       senderId,
@@ -163,3 +177,4 @@ export const uploadMedia = async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+

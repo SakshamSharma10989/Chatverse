@@ -39,17 +39,19 @@ const useSendMessage = () => {
     data = await res.json();
     console.log("Text message response data:", data);
   } else if (content instanceof File) {
-    console.log("Sending file to:", `${baseUrl}/api/message/upload/${selectedConversation._id}`, content.name);
-    const formData = new FormData();
-    formData.append("media", content);
-    const res = await fetch(`${baseUrl}/api/message/upload/${selectedConversation._id}`, {
-      method: "POST",
-      body: formData,
-    });
-    console.log("File upload response status:", res.status);
-    data = await res.json();
-    console.log("File upload response data:", data);
-  } else {
+  console.log("Sending file to:", `${baseUrl}/api/message/upload/${selectedConversation._id}`, content.name);
+  const formData = new FormData();
+  formData.append("file", content); // ✅ correct key for backend multer
+  const res = await fetch(`${baseUrl}/api/message/upload/${selectedConversation._id}`, {
+    method: "POST",
+    credentials: "include", // optional if cookie needed
+    body: formData,
+  });
+  console.log("File upload response status:", res.status);
+  data = await res.json();
+  console.log("File upload response data:", data);
+}
+else {
     throw new Error("Invalid content type");
   }
 
