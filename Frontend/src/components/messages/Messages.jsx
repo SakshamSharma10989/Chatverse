@@ -28,14 +28,18 @@ const Messages = () => {
         receiverId: m.receiverId
       })));
       if (unreadMessages.length > 0) {
-        fetch('/api/message/read', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ messageIds: unreadMessages.map(m => m._id) }),
-        })
-          .then(res => res.json())
-          .then(data => console.log("Read response:", data))
-          .catch(error => console.error("Read error:", error));
+       fetch(`${import.meta.env.VITE_API_URL}/api/message/read`, {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  credentials: 'include', // ✅ Important if you're using cookies/JWTs
+  body: JSON.stringify({ messageIds: unreadMessages.map(m => m._id) })
+})
+  .then(res => res.json())
+  .then(data => console.log("Read response:", data))
+  .catch(error => console.error("Read error:", error));
+
       }
     }
   }, [messages, loading, authUser]);
