@@ -15,16 +15,31 @@ dotenv.config();
 const __dirname = path.resolve();
 const PORT = process.env.PORT || 5000;
 
-const FRONTEND_URL = "https://chatverse-saksham.vercel.app"; 
+const allowedOrigins = [
+  'https://chatverse-saksham.vercel.app',   // production
+  /\.vercel\.app$/                          // all preview builds
+];
+
 app.use(
   cors({
-    origin: FRONTEND_URL,
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true);
+      if (
+        allowedOrigins.some((allowed) =>
+          typeof allowed === "string" ? origin === allowed : allowed.test(origin)
+        )
+      ) {
+        return callback(null, true);
+      } else {
+        return callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   })
 );
 
-// Optional preflight config
-app.options("*", cors({ origin: FRONTEND_URL, credentials: true }));
+// Optional preflight
+app.options("*", cors());
 
 app.use(express.json());
 app.use(cookieParser());
@@ -36,5 +51,5 @@ app.use("/api/user", userRoutes);
 
 server.listen(PORT, async () => {
   await connectToMongo();
-  console.log(`Server listening on port ${PORT}`);
+  console.log(`✅ Server listening on port ${PORT}`);
 });

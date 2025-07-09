@@ -5,11 +5,25 @@ import express from "express";
 const app = express();
 const server = http.createServer(app);
 
-const FRONTEND_URL = "https://chatverse-saksham.vercel.app"; // ✅ your new stable domain
+const allowedOrigins = [
+  'https://chatverse-saksham.vercel.app',
+  /\.vercel\.app$/
+];
 
 export const io = new Server(server, {
   cors: {
-    origin: FRONTEND_URL,
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true);
+      if (
+        allowedOrigins.some((allowed) =>
+          typeof allowed === "string" ? origin === allowed : allowed.test(origin)
+        )
+      ) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by socket CORS"));
+      }
+    },
     methods: ["GET", "POST"],
     credentials: true,
   },
