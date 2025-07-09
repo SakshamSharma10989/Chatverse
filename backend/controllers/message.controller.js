@@ -141,9 +141,10 @@ export const uploadMedia = async (req, res) => {
       conversation = await Conversation.create({ participants: [senderId, receiverId], messages: [] });
     }
 
-    // ⬇️ Upload to Cloudinary
+  
     const uploadResult = await cloudinary.uploader.upload(req.file.path);
     const mediaUrl = uploadResult.secure_url;
+    console.log("Cloudinary URL:", mediaUrl);
 
     // ⬇️ Clean up local temp file
     fs.unlinkSync(req.file.path);
