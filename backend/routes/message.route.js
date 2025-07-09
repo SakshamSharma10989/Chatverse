@@ -8,6 +8,7 @@ const router = express.Router();
 router.get("/:id", protectRoute, getMessage);
 router.post("/send/:id", protectRoute, sendMessage);
 router.post("/read", protectRoute, markMessageAsRead);
-router.post("/upload/:id", protectRoute, upload.single('media'), uploadMedia); // New route for media upload
+router.post("/upload/:id", protectRoute, upload.single('file'), uploadMedia);
+
 
 export default router;
