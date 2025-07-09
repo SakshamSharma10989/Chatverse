@@ -7,21 +7,15 @@ const server = http.createServer(app);
 
 export const io = new Server(server, {
   cors: {
-    origin: (origin, callback) => {
-      if (
-        !origin ||
-        origin.includes("vercel.app") ||
-        origin === "http://localhost:3000"
-      ) {
-        callback(null, true);
-      } else {
-        callback(new Error("Socket.io CORS blocked this origin"));
-      }
-    },
+    origin: [
+      "https://chatverse-ekdu.vercel.app", // ✅ your deployed frontend
+      "http://localhost:3000"              // ✅ local dev
+    ],
     methods: ["GET", "POST"],
-    credentials: true,
-  },
+    credentials: true
+  }
 });
+
 
 const userSocketMap = {};
 
