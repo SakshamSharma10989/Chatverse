@@ -16,9 +16,11 @@ const __dirname = path.resolve();
 const PORT = process.env.PORT || 5000;
 
 const allowedOrigins = [
-  'https://chatverse-saksham.vercel.app',   // production
-  /\.vercel\.app$/                          // all preview builds
+  'https://chatverse-saksham.vercel.app',
+  /^https:\/\/.*\.vercel\.app$/, // ✅ This matches preview URLs too
+  'http://localhost:3000',
 ];
+
 
 app.use(
   cors({
