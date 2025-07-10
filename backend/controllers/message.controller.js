@@ -118,7 +118,6 @@ export const markMessageAsRead = async (req, res) => {
   }
 };
 
-
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -133,22 +132,27 @@ export const uploadMedia = async (req, res) => {
     if (!req.file) return res.status(400).json({ message: "No file uploaded" });
     if (!receiverId) return res.status(400).json({ message: "Receiver ID is required" });
 
+    // Upload to Cloudinary
+    const uploadResult = await cloudinary.uploader.upload(req.file.path);
+    const mediaUrl = uploadResult.secure_url;
+    console.log("Cloudinary URL:", mediaUrl);
+
+    // Clean up local file
+    fs.unlinkSync(req.file.path);
+
+    // Ensure conversation exists
     let conversation = await Conversation.findOne({
       participants: { $all: [senderId, receiverId] },
     });
 
     if (!conversation) {
-      conversation = await Conversation.create({ participants: [senderId, receiverId], messages: [] });
+      conversation = await Conversation.create({
+        participants: [senderId, receiverId],
+        messages: [],
+      });
     }
 
-  
-    const uploadResult = await cloudinary.uploader.upload(req.file.path);
-    const mediaUrl = uploadResult.secure_url;
-    console.log("Cloudinary URL:", mediaUrl);
-
-    // ⬇️ Clean up local temp file
-    fs.unlinkSync(req.file.path);
-
+    // Create and save message
     const newMessage = new Message({
       senderId,
       receiverId,
@@ -160,6 +164,7 @@ export const uploadMedia = async (req, res) => {
     conversation.messages.push(newMessage._id);
     await Promise.all([newMessage.save(), conversation.save()]);
 
+    // Emit real-time events
     const receiverSocketId = getReceiverSocketId(receiverId);
     if (receiverSocketId) {
       io.to(receiverSocketId).emit("newMessage", newMessage);
@@ -174,8 +179,7 @@ export const uploadMedia = async (req, res) => {
 
     res.status(201).json(newMessage);
   } catch (error) {
-    console.log("Error in uploadMedia controller:", error.message);
+    console.error("Error in uploadMedia:", error.message);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
-

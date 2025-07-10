@@ -21,8 +21,12 @@ const Messago = ({ message }) => {
   const [previewUrl, setPreviewUrl] = useState(null);
   const closeModal = () => setPreviewUrl(null);
 
-const fullUrl = message.mediaUrl ? `${import.meta.env.VITE_API_URL}${message.mediaUrl}` : null;
-
+  // ✅ FIXED: use full URL if already hosted (Cloudinary), otherwise prepend API base
+  const fullUrl = message.mediaUrl
+    ? message.mediaUrl.startsWith('http')
+      ? message.mediaUrl
+      : `${import.meta.env.VITE_API_URL}${message.mediaUrl}`
+    : null;
 
   const renderMedia = () => {
     if (!fullUrl) return null;
@@ -73,18 +77,17 @@ const fullUrl = message.mediaUrl ? `${import.meta.env.VITE_API_URL}${message.med
       );
     }
 
-   if (["mp3", "wav", "ogg", "mpeg"].includes(extension)) {
-  return (
-    <div className="flex items-center gap-2 bg-gray-800 p-2 rounded-lg max-w-xs mb-2">
-      <span className="text-white text-sm">🎧 Audio</span>
-      <audio controls className="w-full">
-        <source src={fullUrl} type={`audio/${extension}`} />
-        Your browser does not support the audio element.
-      </audio>
-    </div>
-  );
-}
-
+    if (["mp3", "wav", "ogg", "mpeg"].includes(extension)) {
+      return (
+        <div className="flex items-center gap-2 bg-gray-800 p-2 rounded-lg max-w-xs mb-2">
+          <span className="text-white text-sm">🎧 Audio</span>
+          <audio controls className="w-full">
+            <source src={fullUrl} type={`audio/${extension}`} />
+            Your browser does not support the audio element.
+          </audio>
+        </div>
+      );
+    }
 
     if (extension === "pdf") {
       return (
