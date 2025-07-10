@@ -49,6 +49,10 @@ app.use("/api/auth", authRoutes);
 app.use("/api/message", messageRoutes);
 app.use("/api/user", userRoutes);
 
+app.get("/health", (req, res) => {
+  res.status(200).send("OK");
+});
+
 server.listen(PORT, async () => {
   await connectToMongo();
   console.log(`✅ Server listening on port ${PORT}`);
