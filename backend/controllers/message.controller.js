@@ -133,7 +133,7 @@ export const uploadMedia = async (req, res) => {
     if (!receiverId) return res.status(400).json({ message: "Receiver ID is required" });
 
     // Upload to Cloudinary
-    const uploadResult = await cloudinary.uploader.upload(req.file.path);
+    const uploadResult = await cloudinary.uploader.upload(req.file.path, { resource_type: "auto" });
     const mediaUrl = uploadResult.secure_url;
     console.log("Cloudinary URL:", mediaUrl);
 
